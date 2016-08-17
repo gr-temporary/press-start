@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+	<title>Joystick</title>
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+
+    <style>
+        .controller {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+
+            background-color: #454545;
+            border: 1em solid #aaa;
+        }
+
+        .d-pad {
+            position: absolute;
+            width: 15em;
+            height: 15em;
+            left: 6em;
+            bottom: 5em;
+        }
+
+        .d-pad .button {
+            position: absolute;
+            width: 5em;
+            height: 5em;
+
+            background-color: #000;
+            border: 1em solid #aaa;
+        }
+
+        .up {
+            top: 0;
+            left: 5em;
+
+            border-bottom: none;
+        }
+
+        .left {
+            top: 5em;
+            left: 0;
+
+            border-right: none;
+        }
+
+        .down {
+            top: 10em;
+            left: 5em;
+
+            border-top: none;
+        }
+
+        .right {
+            top: 5em;
+            left: 10em;
+
+            border-left: none;
+        }
+
+        .center {
+            top: 5em;
+            left: 5em;
+
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="controller">
+        <div class="d-pad">
+            <div class="button up"></div>
+            <div class="button left"></div>
+            <div class="button down"></div>
+            <div class="button right"></div>
+            <div class="button center"></div>
+        </div>
+
+        <div class="system-buttons">
+            <div class="start-button">
+
+            </div>
+            <div class="select-button">
+
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <div class="button-a"></div>
+            <div class="button-b"></div>
+        </div>
+    </div>
+<script src="mobile-detect.js"></script>
+<script>
+    var possibleDevices = [
+        "iPhone",
+        "iPad",
+        "Android Phone",
+        "Android Tablet",
+        "Windows Phone",
+        "Mac",
+        "Windows",
+        "Other"
+    ];
+
+    var md = new MobileDetect(window.navigator.userAgent);
+
+    var style = null;
+    function resize() {
+        // make em == 1vw
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+
+        if(style) {
+            document.head.removeChild(style);
+        }
+        style = document.createElement("style");
+
+        style.innerHTML = "body { font-size: " + (width * 0.01) + "px; }";
+
+        document.head.appendChild(style);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+</script>
+</body>
+</html>
