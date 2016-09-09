@@ -32,30 +32,6 @@ if (typeof jQuery !== 'undefined') {
                 self.nes = nes;
 
                 /*
-                 * Create UI
-                 */
-                self.root = $('<div></div>');
-                self.screen = $('<canvas class="nes-screen" width="256" height="240"></canvas>').appendTo(self.root);
-
-                if (!self.screen[0].getContext) {
-                    parent.html("Your browser doesn't support the <code>&lt;canvas&gt;</code> tag. Try Google Chrome, Safari, Opera or Firefox!");
-                    return;
-                }
-
-                self.romContainer = $('<div class="nes-roms"></div>').appendTo(self.root);
-                self.romSelect = $('<select></select>').appendTo(self.romContainer);
-
-                self.controls = $('<div class="nes-controls"></div>').appendTo(self.root);
-                self.buttons = {
-                    pause: $('<input type="button" value="pause" class="nes-pause" disabled="disabled">').appendTo(self.controls),
-                    restart: $('<input type="button" value="restart" class="nes-restart" disabled="disabled">').appendTo(self.controls),
-                    sound: $('<input type="button" value="enable sound" class="nes-enablesound">').appendTo(self.controls),
-                    zoom: $('<input type="button" value="zoom in" class="nes-zoom">').appendTo(self.controls)
-                };
-                self.status = $('<p class="nes-status">Booting up...</p>').appendTo(self.root);
-                self.root.appendTo(parent);
-
-                /*
                  * ROM loading
                  */
                 self.romSelect.change(function() {
@@ -112,29 +88,6 @@ if (typeof jQuery !== 'undefined') {
                         self.zoomed = true;
                     }
                 });
-
-                /*
-                 * Lightgun experiments with mouse
-                 * (Requires jquery.dimensions.js)
-                 */
-                if ($.offset) {
-                    self.screen.mousedown(function(e) {
-                        if (self.nes.mmap) {
-                            self.nes.mmap.mousePressed = true;
-                            // FIXME: does not take into account zoom
-                            self.nes.mmap.mouseX = e.pageX - self.screen.offset().left;
-                            self.nes.mmap.mouseY = e.pageY - self.screen.offset().top;
-                        }
-                    }).mouseup(function() {
-                        setTimeout(function() {
-                            if (self.nes.mmap) {
-                                self.nes.mmap.mousePressed = false;
-                                self.nes.mmap.mouseX = 0;
-                                self.nes.mmap.mouseY = 0;
-                            }
-                        }, 500);
-                    });
-                }
 
                 if (typeof roms != 'undefined') {
                     self.setRoms(roms);
