@@ -109,7 +109,7 @@ if (typeof jQuery !== 'undefined') {
                 /*
                  * Keyboard
                  */
-                $(document).
+                /*$(document).
                     bind('keydown', function(evt) {
                         self.nes.keyboard.keyDown(evt);
                     }).
@@ -118,14 +118,12 @@ if (typeof jQuery !== 'undefined') {
                     }).
                     bind('keypress', function(evt) {
                         self.nes.keyboard.keyPress(evt);
-                    });
+                    });*/
 
                 /*
                  * Sound
                  */
-                self.dynamicaudio = new DynamicAudio({
-                    swf: nes.opts.swfPath+'dynamicaudio.swf'
-                });
+                self.dynamicaudio = new Sound();
             };
 
             UI.prototype = {
@@ -228,7 +226,7 @@ if (typeof jQuery !== 'undefined') {
                 },
 
                 writeAudio: function(samples) {
-                    return this.dynamicaudio.writeInt(samples);
+                    return this.sound.writeBuffer(samples);
                 },
 
                 writeFrame: function(buffer, prevBuffer) {

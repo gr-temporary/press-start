@@ -8,106 +8,233 @@
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
 
     <style>
-        .controller {
-            position: absolute;
+        html, body {
             width: 100%;
             height: 100%;
-
-            background-color: #454545;
-            border: 1em solid #aaa;
+            margin: 0;
+            padding: 0;
+            background-color: #8d8d8d;
+            overflow: hidden;
         }
 
-        .d-pad {
+        .controller-image {
             position: absolute;
-            width: 15em;
-            height: 15em;
-            left: 6em;
-            bottom: 5em;
+            bottom: 0;
+            width: 100%;
+            height: 43.34em;
+            background-image: url(image.jpg);
+            background-size: cover;
         }
 
-        .d-pad .button {
+        .info {
             position: absolute;
-            width: 5em;
-            height: 5em;
-
-            background-color: #000;
-            border: 1em solid #aaa;
-        }
-
-        .up {
+            width: 40%;
+            left: 30%;
             top: 0;
-            left: 5em;
-
-            border-bottom: none;
-        }
-
-        .left {
-            top: 5em;
-            left: 0;
-
-            border-right: none;
-        }
-
-        .down {
-            top: 10em;
-            left: 5em;
-
-            border-top: none;
-        }
-
-        .right {
-            top: 5em;
-            left: 10em;
-
-            border-left: none;
-        }
-
-        .center {
-            top: 5em;
-            left: 5em;
-
-            border: none;
+            background-color: white;
+            border-radius: 0 0 2em 2em;
+            padding: 2em;
         }
     </style>
 </head>
 <body>
-    <div class="controller">
-        <div class="d-pad">
-            <div class="button up"></div>
-            <div class="button left"></div>
-            <div class="button down"></div>
-            <div class="button right"></div>
-            <div class="button center"></div>
-        </div>
+    <div class="controller-image">
 
-        <div class="system-buttons">
-            <div class="start-button">
+    </div>
 
-            </div>
-            <div class="select-button">
-
-            </div>
-        </div>
-
-        <div class="action-buttons">
-            <div class="button-a"></div>
-            <div class="button-b"></div>
-        </div>
+    <div class="info info-phone-vertical">
+        Переверните телефон в пейзажный режим, так будет удобнее.
+    </div>
+    <div class="info info-pc">
+        Вы можете использовать клавиатуру:
+        <ul>
+            <li>Стрелки - d-pad</li>
+            <li>Z - A</li>
+            <li>X - B</li>
+            <li>Enter - start</li>
+            <li>Space - select</li>
+        </ul>
     </div>
 <script src="mobile-detect.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script>
+    var socket = io.connect();
+    socket.on('news', function (data) {
+        console.log(data);
+        socket.emit('my other event', { my: 'data' });
+    });
+
+    var keys = {
+        "up": false,
+        "down": false,
+        "left": false,
+        "right": false,
+        "a": false,
+        "b": false,
+        "start": false,
+        "select": false
+    };
+
     var possibleDevices = [
-        "iPhone",
-        "iPad",
-        "Android Phone",
-        "Android Tablet",
-        "Windows Phone",
-        "Mac",
-        "Windows",
-        "Other"
+        "iPhone", // 0
+        "iPad", // 1
+        "Android Phone", // 2
+        "Android Tablet", // 3
+        "Windows Phone", // 4
+        "Mac", // 5
+        "Windows", // 6
+        "Other" // 7
     ];
 
+    var device = possibleDevices.length - 1;
     var md = new MobileDetect(window.navigator.userAgent);
+
+    if(md.phone() == 'iPhone') {
+        device = 0;
+    } else if(md.tablet() == 'iPad') {
+        device = 1;
+    } else if(md.os() == 'WindowsPhoneOS') {
+        device = 4;
+    } else if(md.phone()) {
+        device = 2;
+    } else if(md.tablet()) {
+        device = 3;
+    } else if(navigator.platform.match(/mac/i)) {
+        device = 5;
+    } else if(navigator.platform.match(/win/i)) {
+        device = 6;
+    }
+
+    socket.emit('device', { device: device });
+
+    document.addEventListener('keyup', function(event) {
+        console.log('/\\ ' + event.keyCode);
+        switch(event.keyCode) {
+            case 37: keys['left'] = false; break;
+            case 38: keys['up'] = false; break;
+            case 39: keys['right'] = false; break;
+            case 40: keys['down'] = false; break;
+            case 90: keys['a'] = false; break;
+            case 88: keys['b'] = false; break;
+            case 13: keys['start'] = false; break;
+            case 32: keys['select'] = false; break;
+        }
+    });
+
+    document.addEventListener('keydown', function(event) {
+        console.log('\\/ ' + event.keyCode);
+        switch(event.keyCode) {
+            case 37: keys['left'] = true; break;
+            case 38: keys['up'] = true; break;
+            case 39: keys['right'] = true; break;
+            case 40: keys['down'] = true; break;
+            case 90: keys['a'] = true; break;
+            case 88: keys['b'] = true; break;
+            case 13: keys['start'] = true; break;
+            case 32: keys['select'] = true; break;
+        }
+    });
+
+    function checkTouches(event) {
+        for(var i in keys) keys[i] = false;
+
+        var top = joystick.offsetTop;
+        var width = joystick.offsetWidth;
+        var height = joystick.offsetHeight;
+
+        var result = false;
+
+        for(var i=0; i<event.touches.length; i++) {
+            var t = event.touches[i];
+            var x = (t.pageX) * 100 / width;
+            var y = (t.pageY - top) * 100 / height;
+
+            // check d-pad
+            if(x < 32) {
+                var a = Math.atan2(y - 60, x - 17);
+                console.log(a / Math.PI);
+                if(a > Math.PI / 4 && a < 3 * Math.PI / 4) {
+                    console.log('down');
+                    keys['down'] = true;
+                    result = true;
+                }
+                if(a > -Math.PI / 4 && a < Math.PI / 4) {
+                    console.log('right');
+                    keys['right'] = true;
+                    result = true;
+                }
+                if(a > -3 * Math.PI / 4 && a < -Math.PI / 4) {
+                    console.log('up');
+                    keys['up'] = true;
+                    result = true;
+                }
+                if(a < -3 * Math.PI / 4 || a > 3 * Math.PI / 4) {
+                    console.log('left');
+                    keys['left'] = true;
+                    result = true;
+                }
+            }
+
+            // check menu buttons
+            if(y > 54 && y < 87) {
+                if(x > 35 && x < 46) {
+                    keys['select'] = true;
+                    result = true;
+                }
+                if(x > 46 && x < 58) {
+                    keys['start'] = true;
+                    result = true;
+                }
+            }
+
+            // check AB buttons
+            if(y > 44 && y < 95) {
+                if(x > 64 && x < 76) {
+                    keys['b'] = true;
+                    result = true;
+                }
+                if(x > 76 && x < 88) {
+                    keys['a'] = true;
+                    result = true;
+                }
+            }
+        }
+        return result;
+    }
+
+    function sendKeys() {
+        socket.emit('keys', { keys: keys });
+    }
+
+    var joystick = document.querySelector('.controller-image');
+    joystick.addEventListener('touchstart', function(event) {
+        checkTouches(event);
+        sendKeys();
+    });
+    joystick.addEventListener('touchend', function(event) {
+        checkTouches(event);
+        sendKeys();
+    });
+    joystick.addEventListener('touchmove', function(event) {
+        checkTouches(event);
+        sendKeys();
+    });
+
+    function checkDevice() {
+        var infos = document.querySelectorAll('.info');
+        for(var i=0; i<infos.length; i++) {
+            infos[i].style.display = 'none';
+        }
+
+        var aspect = window.innerHeight / window.innerWidth;
+
+        if(md.phone() && aspect > 1) {
+            document.querySelector('.info-phone-vertical').style.display = 'block';
+        }
+        if(!md.phone() && !md.tablet()) {
+            document.querySelector('.info-pc').style.display = 'block';
+        }
+    }
 
     var style = null;
     function resize() {
@@ -123,6 +250,8 @@
         style.innerHTML = "body { font-size: " + (width * 0.01) + "px; }";
 
         document.head.appendChild(style);
+
+        checkDevice();
     }
     resize();
     window.addEventListener('resize', resize);

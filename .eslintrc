@@ -5,7 +5,7 @@
     "binaryLiterals": false,                    // enable binary literals
     "blockBindings": false,                     // enable let and const (aka block bindings)
     "defaultParams": false,                     // enable default function parameters
-    "forOf": false,                             // enable for-of loops
+    "forOf": true,                             // enable for-of loops
     "generators": false,                        // enable generators
     "objectLiteralComputedProperties": false,   // enable computed object literal property names
     "objectLiteralDuplicateProperties": false,  // enable duplicate object literal properties in strict mode
@@ -28,7 +28,15 @@
     "phantomjs": false,   // phantomjs global variables.
     "jquery": false,      // jquery global variables.
     "prototypejs": false, // prototypejs global variables.
-    "shelljs": false,     // shelljs global variables.
+    "shelljs": false     // shelljs global variables.
+  },
+  
+  "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+          "jsx": true
+      }
   },
 
   "globals": {

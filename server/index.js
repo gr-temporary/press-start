@@ -1,6 +1,9 @@
 const fs = require('fs');
-const express = require('express');
 const electron = require('electron');
+var express = require('express');
+var expressServer = express();
+var server = require('http').Server(expressServer);
+var io = require('socket.io')(server);
 const ip = require('ip');
 
 const app = electron.app;
@@ -9,6 +12,43 @@ const BrowserWindow = electron.BrowserWindow;
 
 const ipc = electron.ipcMain;
 let mainWindow;
+
+expressServer.use('/', express.static('controller'));
+
+server.listen(8000);
+
+var players = [];
+
+io.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+
+  socket.on('device', function(data) {
+      if(players.length < 2) {
+          players.push(socket);
+      }
+  });
+
+  socket.on('disconnect', function() {
+      for(var i=0; i<players.length; i++) {
+          if(players[i].id == socket.id) {
+              players.splice(i, 1);
+              break;
+          }
+      }
+  });
+
+  socket.on('keys', function(data) {
+      var s = "";
+      for(var i in data.keys) {
+          if(data.keys[i])
+            s += i + " ";
+      }
+      console.log(s);
+  });
+});
 
 function createWindow() {
     // Create the browser window.
