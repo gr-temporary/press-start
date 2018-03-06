@@ -24,9 +24,10 @@
   "dependencies": {
     "electron": "^1.8.3",
     "express": "^4.16.2",
+    "ip": "^1.1.5",
     "jsnes": "^1.0.0",
-    "node-ip": "^0.1.2",
     "npm": "^5.7.1",
-    "socket.io": "^2.0.4"
+    "socket.io": "^2.0.4",
+    "vue": "^2.5.13"
   }
 }
