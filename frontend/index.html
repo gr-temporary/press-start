@@ -7,6 +7,17 @@
 <body>
 	<main>
 	Yo {{address}}
+
+		<div v-if="players[0].id">
+			{{players[0].id}}
+			<span v-show="players[0].buttons.up">UP</span>
+			<span v-show="players[0].buttons.down">DOWN</span>
+			<span v-show="players[0].buttons.left">LEFT</span>
+			<span v-show="players[0].buttons.right">RIGHT</span>
+		</div>
+		<div v-if="players[1].id">
+			{{players[1].id}}
+		</div>
 	</main>
 	<script>require("./js/press-start.js");</script>
 </body>
