@@ -6,37 +6,29 @@ const ipcRenderer = electron.ipcRenderer;
 
 console.log(electron);
 
+function createPlayer() {
+	return {
+			id: null,
+			type: null,
+			buttons: {
+				up: false,
+				down: false,
+				left: false,
+				right: false,
+				a: false,
+				b: false,
+				select: false,
+				start: false
+			}
+		};
+}
+
 let app = new Vue({
   el: 'main',
   data: {
     address: '',
-    players: [{
-    	id: null,
-    	type: null,
-    	buttons: {
-			up: false,
-			down: false,
-			left: false,
-			right: false,
-			a: false,
-			b: false,
-			select: false,
-			start: false
-		}
-    }, {
-    	id: null,
-    	type: null,
-    	buttons: {
-			up: false,
-			down: false,
-			left: false,
-			right: false,
-			a: false,
-			b: false,
-			select: false,
-			start: false
-		}
-    }]
+	players: [createPlayer(), createPlayer()],
+	defaultPlayer: createPlayer()
   },
   methods: {
   	updateAddress: function(newAddress) {
@@ -60,7 +52,31 @@ let app = new Vue({
   		if(player.buttons.up) {
   			console.log("UP");
   		}
-  	}
+	  },
+	  realKeyDown: function(event) {
+		switch(event.which) {
+			case 37: this.defaultPlayer.buttons.left = true; break;
+			case 38: this.defaultPlayer.buttons.up = true; break;
+			case 39: this.defaultPlayer.buttons.right = true; break;
+			case 40: this.defaultPlayer.buttons.down = true; break;
+			case 90: this.defaultPlayer.buttons.a = true; break; // z
+			case 88: this.defaultPlayer.buttons.b = true; break; // x
+			case 32: this.defaultPlayer.buttons.select = true; break; // space
+			case 13: this.defaultPlayer.buttons.start = true; break; // enter
+		}
+	  },
+	  realKeyUp: function(event) {
+		switch(event.which) {
+			case 37: this.defaultPlayer.buttons.left = false; break;
+			case 38: this.defaultPlayer.buttons.up = false; break;
+			case 39: this.defaultPlayer.buttons.right = false; break;
+			case 40: this.defaultPlayer.buttons.down = false; break;
+			case 90: this.defaultPlayer.buttons.a = false; break; // z
+			case 88: this.defaultPlayer.buttons.b = false; break; // x
+			case 32: this.defaultPlayer.buttons.select = false; break; // space
+			case 13: this.defaultPlayer.buttons.start = false; break; // enter
+		}
+	  }
   },
   mounted: function() {
   	ipcRenderer.send("ready");
@@ -69,6 +85,9 @@ let app = new Vue({
 
   	ipcRenderer.on("player-data", (event, data) => this.updatePlayers(data.players));
 
-  	ipcRenderer.on("player-keys", (event, data) => this.updateKeys(data));
+	ipcRenderer.on("player-keys", (event, data) => this.updateKeys(data));
+	  
+	document.addEventListener('keydown', (event) => this.realKeyDown(event));
+	document.addEventListener('keyup', (event) => this.realKeyUp(event));
   }
 });
