@@ -8,16 +8,61 @@
 </head>
 <body>
 	<main>
-	Yo {{address}}
-		<player-status></player-status>
+		<p class="connect-info">http://{{address}}:3003</p>
 		<rom-list></rom-list>
+		<game-screen></game-screen>
+		<player-status></player-status>
 	</main>
+
 	<script id="player-status" type="text/x-template">
 		<div class="players-wrapper">
-			<div class="player player-1"></div>
-			<div class="player player-2"></div>
+			<div class="player player-1" v-bind:class="{ disconnected: !players[0].connected }">
+				<i class="fab fa-apple" v-if="players[0].connected && players[0].type == 'iOS'"></i>
+				<i class="fab fa-android" v-if="players[0].connected && players[0].type == 'Android'"></i>
+				<i class="fab fa-windows" v-if="players[0].connected && players[0].type == 'Windows'"></i>
+				<i class="fas fa-desktop" v-if="players[0].connected && players[0].type == 'Mac'"></i>
+				<i class="fas fa-mobile-alt" v-if="players[0].connected && players[0].type == 'unknown'"></i>
+				<i class="fas fa-gamepad" v-if="players[0].connected && players[0].type == 'gamepad'"></i>
+				<i class="fas fa-keyboard" v-if="!players[0].connected"></i>
+			</div>
+			<div class="no-player" v-bind:class="{ transparent: players[0].connected }">
+				<p>No joystick connected!</p>
+			</div>
+			<div class="player player-2" v-bind:class="{ disconnected: !players[1].connected }">
+				<i class="fab fa-apple" v-if="players[1].connected && players[1].type == 'iOS'"></i>
+				<i class="fab fa-android" v-if="players[1].connected && players[1].type == 'Android'"></i>
+				<i class="fab fa-windows" v-if="players[1].connected && players[1].type == 'Windows'"></i>
+				<i class="fas fa-desktop" v-if="players[1].connected && players[1].type == 'Mac'"></i>
+				<i class="fas fa-mobile-alt" v-if="players[1].connected && players[1].type == 'unknown'"></i>
+				<i class="fas fa-gamepad" v-if="players[1].connected && players[1].type == 'gamepad'"></i>
+				<i class="fas fa-times" v-if="!players[1].connected"></i>
+			</div>
 		</div>
 	</script>
+
+	<script id="rom-list" type="text/x-template">
+		<div class="rom-gallery">
+			<div class="rom-list" ref="list">
+				<div class="rom-item" v-for="rom in roms">
+					<div class="rom-wrapper" v-bind:class="{ active: rom.index == activeIndex }">
+						<img class="rom-preview" v-bind:src="getPreview(rom)">
+						<div class="rom-name">{{rom.name}}</div>
+					</div>
+				</div>
+			</div>
+			<div class="scroll-button left">
+				<i class="fas fa-caret-left" ref="left"></i>
+			</div>
+			<div class="scroll-button right">
+				<i class="fas fa-caret-right" ref="right"></i>
+			</div>
+		</div>
+	</script>
+
+	<script id="game-screen" type="text/x-template">
+		<div></div>
+	</script>
+
 	<script>require("./js/press-start.js");</script>
 </body>
 </html>

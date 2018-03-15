@@ -19,8 +19,20 @@ function updateAddress(sender) {
 }
 
 function listRoms(sender) {
-	let roms = fs.readdirSync(path.join(__dirname, '..', 'roms'));
-	sender.send("rom-list", roms);
+	let frontendPath = path.join(__dirname, '..', 'frontend');
+	let roms = fs.readdirSync(path.join(frontendPath, 'roms'));
+	let names = roms.map(x => x.replace(/\.nes$/i, ''));
+	let result = [];
+	names.forEach(x => {
+		let img = path.join(frontendPath, 'img', x + '.png');
+		let image = fs.existsSync(img) ? x + '.png' : 'NES Test.png';
+		result.push({
+			name: x,
+			rom: x + '.rom',
+			preview: image 
+		});
+	});
+	sender.send("rom-list", result);
 }
 
 function sendKeys(data) {
@@ -42,6 +54,9 @@ function init() {
 	ipcMain.on('ready', (event) => {
 		updateAddress(event.sender);
 		bus.emit('fetch-players');
+	});
+	ipcMain.on('get-roms', (event) => {
+		listRoms(event.sender);
 	});
 
 	bus.on('player-keys', sendKeys);
