@@ -27,6 +27,10 @@ function sendKeys(data) {
 	gameWindow.webContents.send('player-keys', data);
 }
 
+function sendType(data) {
+	gameWindow.webContents.send('player-type', data);
+}
+
 function updatePlayers(data) {
 	gameWindow.webContents.send('player-data', data);
 }
@@ -41,6 +45,7 @@ function init() {
 	});
 
 	bus.on('player-keys', sendKeys);
+	bus.on('player-type', sendType);
 	bus.on('update-players', updatePlayers);
 }
 

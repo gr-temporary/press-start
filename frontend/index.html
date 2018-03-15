@@ -3,22 +3,21 @@
 <head>
 	<meta charset="utf-8">
 	<title>Press start</title>
+	<link rel="stylesheet" href="css/fontawesome-all.min.css">
+	<link rel="stylesheet" href="css/press-start.css">
 </head>
 <body>
 	<main>
 	Yo {{address}}
-
-		<div v-if="players[0].id">
-			{{players[0].id}}
-			<span v-show="players[0].buttons.up">UP</span>
-			<span v-show="players[0].buttons.down">DOWN</span>
-			<span v-show="players[0].buttons.left">LEFT</span>
-			<span v-show="players[0].buttons.right">RIGHT</span>
-		</div>
-		<div v-if="players[1].id">
-			{{players[1].id}}
-		</div>
+		<player-status></player-status>
+		<rom-list></rom-list>
 	</main>
+	<script id="player-status" type="text/x-template">
+		<div class="players-wrapper">
+			<div class="player player-1"></div>
+			<div class="player player-2"></div>
+		</div>
+	</script>
 	<script>require("./js/press-start.js");</script>
 </body>
 </html>

@@ -14,7 +14,7 @@ class Player {
 			start: false
 		};
 		this.primary = false;
-		this.type = 'mobile';
+		this.type = 'unknown';
 
 		this.socket = socket;
 		this.id = socket.id;
@@ -22,6 +22,12 @@ class Player {
 		this.socket.on('keyup', (key) => this.keyup(key));
 		this.socket.on('keydown', (key) => this.keydown(key));
 		this.socket.on('keys', (keys) => this.setKeys(keys));
+		this.socket.on('type', (type) => this.updateType(type));
+	}
+
+	updateType(type) {
+		this.type = type;
+		bus.emit('player-type', { player: this.id, type: type });
 	}
 
 	updateState() {

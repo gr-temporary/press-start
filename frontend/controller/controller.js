@@ -17,6 +17,22 @@ var buttons = {
 	select: false
 };
 
+function detectOS() {
+	// iOS, Android, Windows PC, Mac, Linux, Windows Phone
+	var nav = navigator.userAgent;
+	var os = "unknown";
+	if(nav.match(/Windows NT/i)) {
+		os = "Windows";
+	} else if(nav.match(/Macintosh/i)) {
+		os = "Mac";
+	} else if(nav.match(/Android/i)) {
+		os = "Android";
+	} else if(nav.match(/iPhone|iPad|iPod/i)) {
+		os = "iOS";
+	}
+	return os;
+}
+
 function updateDpad(touches) {
 	var rect = dpad.getBoundingClientRect();
 	var pi4 = Math.PI / 4;
@@ -91,6 +107,8 @@ resize();
 var socket = io('/');
 socket.on('connect', () => {
 	container.classList.remove('disconnected');
+	var os = detectOS();
+	socket.emit("type", os);
 	socket.on('disconnect', () => {
 		container.classList.add('disconnected');
 	});

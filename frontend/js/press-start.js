@@ -4,12 +4,10 @@ const Vue = require('vue/dist/vue.js');
 
 const ipcRenderer = electron.ipcRenderer;
 
-console.log(electron);
-
 function createPlayer() {
 	return {
 			id: null,
-			type: null,
+			type: 'unknown',
 			buttons: {
 				up: false,
 				down: false,
@@ -52,8 +50,14 @@ let app = new Vue({
   		if(player.buttons.up) {
   			console.log("UP");
   		}
-	  },
-	  realKeyDown: function(event) {
+	},
+	updateType: function(data) {
+		let player = this.players.find(x => x.id == data.id);
+		if(player) {
+			player.type = data.type;
+		}
+	},
+	realKeyDown: function(event) {
 		switch(event.which) {
 			case 37: this.defaultPlayer.buttons.left = true; break;
 			case 38: this.defaultPlayer.buttons.up = true; break;
@@ -64,8 +68,8 @@ let app = new Vue({
 			case 32: this.defaultPlayer.buttons.select = true; break; // space
 			case 13: this.defaultPlayer.buttons.start = true; break; // enter
 		}
-	  },
-	  realKeyUp: function(event) {
+	},
+	realKeyUp: function(event) {
 		switch(event.which) {
 			case 37: this.defaultPlayer.buttons.left = false; break;
 			case 38: this.defaultPlayer.buttons.up = false; break;
@@ -76,7 +80,7 @@ let app = new Vue({
 			case 32: this.defaultPlayer.buttons.select = false; break; // space
 			case 13: this.defaultPlayer.buttons.start = false; break; // enter
 		}
-	  }
+	}
   },
   mounted: function() {
   	ipcRenderer.send("ready");
@@ -86,6 +90,8 @@ let app = new Vue({
   	ipcRenderer.on("player-data", (event, data) => this.updatePlayers(data.players));
 
 	ipcRenderer.on("player-keys", (event, data) => this.updateKeys(data));
+
+	ipcRenderer.on("player-type", (event, data) => this.updateType(data));
 	  
 	document.addEventListener('keydown', (event) => this.realKeyDown(event));
 	document.addEventListener('keyup', (event) => this.realKeyUp(event));
