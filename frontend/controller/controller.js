@@ -20,17 +20,16 @@ var buttons = {
 function detectOS() {
 	// iOS, Android, Windows PC, Mac, Linux, Windows Phone
 	var nav = navigator.userAgent;
-	var os = "unknown";
-	if(nav.match(/Windows NT/i)) {
-		os = "Windows";
+	if(nav.match(/Windows/i)) {
+		return "Windows";
 	} else if(nav.match(/Macintosh/i)) {
-		os = "Mac";
+		return "Mac";
 	} else if(nav.match(/Android/i)) {
-		os = "Android";
+		return "Android";
 	} else if(nav.match(/iPhone|iPad|iPod/i)) {
-		os = "iOS";
+		return "iOS";
 	}
-	return os;
+	return "unknown";
 }
 
 function updateDpad(touches) {
@@ -108,7 +107,7 @@ var socket = io('/');
 socket.on('connect', () => {
 	container.classList.remove('disconnected');
 	var os = detectOS();
-	socket.emit("type", os);
+	socket.emit("type", { os: os, ua: navigator.userAgent });
 	socket.on('disconnect', () => {
 		container.classList.add('disconnected');
 	});

@@ -29,5 +29,6 @@ module.exports = {
 	},
 	get: function() {
 		return http;
-	}
+    },
+    stop: shutDown
 };

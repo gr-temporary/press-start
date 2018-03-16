@@ -26,8 +26,9 @@ class Player {
 	}
 
 	updateType(type) {
-		this.type = type;
-		bus.emit('player-type', { player: this.id, type: type });
+		console.log(type);
+		this.type = type.os;
+		bus.emit('player-type', { player: this.id, type: this.type });
 	}
 
 	updateState() {

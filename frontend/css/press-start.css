@@ -18,13 +18,14 @@
 }
 
 html, body {
+	--bgcolor: #131313;
 	margin: 0;
 	padding: 0;
 	width: 100%;
 	height: 100%;
 
 	color: white;
-	background: black;
+	background: #131313;
 	font-family: 'Press Start 2P', Helvetica, Arial;
 }
 
@@ -113,7 +114,7 @@ html, body {
 }
 
 .rom-item .rom-name {
-	margin-top: 20px;
+	margin-top: 25px;
 	font-size: 20px;
 	line-height: 1.5;
 }
@@ -130,12 +131,12 @@ html, body {
 
 .scroll-button.left {
 	left: 0;
-	background-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0));
+	background-image: linear-gradient(to right, rgba(19,19,19,1), rgba(19,19,19,0));
 }
 
 .scroll-button.right {
 	right: 0;
-	background-image: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));
+	background-image: linear-gradient(to left, rgba(19,19,19,1), rgba(19,19,19,0));
 }
 
 @keyframes push {

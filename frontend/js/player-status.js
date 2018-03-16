@@ -62,9 +62,10 @@ module.exports = {
 			this.updateJoysticks();
 		},
 		updateType: function(data) {
-			let player = players.find(x => x.id == data.player);
-			if(player) {
-				player.type = data.type;
+			let player = players.findIndex(x => x.id == data.player);
+			if(player > -1) {
+				players[player].type = data.type;
+				this.players[player].type = data.type;
 			}
 		},
 		realKeyDown: function(event) {

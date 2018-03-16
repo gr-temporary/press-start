@@ -69,6 +69,9 @@ let frontend = {
 		gameWindow = win;
 		
 		init();
+	},
+	stop: function(callback) {
+		staticServer.stop();
 	}
 };
 
