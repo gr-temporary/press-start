@@ -8,8 +8,6 @@
 </head>
 <body>
 	<main>
-		<p v-if="address" class="connect-info">http://{{address}}:3003</p>
-		<p v-if="!address" class="connect-info">Connect to wi-fi, please</p>
 		<rom-list></rom-list>
 		<game-screen></game-screen>
 		<player-status></player-status>
@@ -44,6 +42,7 @@
 	<script id="rom-list" type="text/x-template">
 		<div class="rom-gallery">
 			<div class="rom-list" ref="list">
+				<hello-screen></hello-screen>
 				<div class="rom-item" v-for="rom in roms">
 					<div class="rom-wrapper" v-bind:class="{ active: rom.index == activeIndex }">
 						<img class="rom-preview" v-bind:src="getPreview(rom)">
@@ -60,8 +59,20 @@
 		</div>
 	</script>
 
+	<script type="text/x-template" id="hello-screen">
+		<div class="rom-item hello">
+			<p>Go to <strong>http://{{address}}:3003</strong> on your phone, or use the QR code:</p>
+			<p>
+				<canvas ref="canvas" width="400" height="400"></canvas>
+			</p>
+			<p class="small">Press <i class="fas fa-arrow-left"></i> <i class="fas fa-arrow-right"></i> to move around, and START to start</p>
+		</div>
+	</script>
+
 	<script id="game-screen" type="text/x-template">
-		<div></div>
+		<div class="game-screen">
+			<canvas ref="canvas"></canvas>
+		</div>
 	</script>
 
 	<script>require("./js/press-start.js");</script>

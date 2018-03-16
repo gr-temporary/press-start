@@ -24,9 +24,9 @@
   "dependencies": {
     "electron": "^1.8.3",
     "express": "^4.16.2",
-    "ip": "^1.1.5",
     "jsnes": "^1.0.0",
     "npm": "^5.7.1",
+    "qrcode": "^1.2.0",
     "socket.io": "^2.0.4",
     "vue": "^2.5.13"
   }

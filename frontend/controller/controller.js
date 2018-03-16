@@ -90,6 +90,16 @@ function addTouchEvents(element, callback) {
 addTouchEvents(dpad, updateDpad);
 addTouchEvents(ab, updateAB);
 
+function updatePrimary(primary) {
+	if(primary) {
+		container.classList.remove('secondary');
+		container.classList.add('primary');
+	} else {
+		container.classList.remove('primary');
+		container.classList.add('secondary');
+	}
+}
+
 function resize() {
 	var width = window.innerWidth;
 	var size = width / 70;
@@ -108,6 +118,7 @@ socket.on('connect', () => {
 	container.classList.remove('disconnected');
 	var os = detectOS();
 	socket.emit("type", { os: os, ua: navigator.userAgent });
+	socket.on("primary", updatePrimary);
 	socket.on('disconnect', () => {
 		container.classList.add('disconnected');
 	});

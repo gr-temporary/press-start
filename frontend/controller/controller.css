@@ -14,7 +14,18 @@ body {
 }
 
 .shadow {
+	background-color: #999;
 	box-shadow: 0 1rem 0 0 #444;
+}
+
+.primary .shadow {
+	background-color: #EC1C1C;
+	box-shadow: 0 1rem 0 0 #813C3C;
+}
+
+.secondary .shadow {
+	background-color: #4214CD;
+	box-shadow: 0 1rem 0 0 #392F59;
 }
 
 .shadow.pushed {
@@ -99,7 +110,6 @@ body {
 	width: 8rem;
 	height: 8rem;
 	border-radius: 50%;
-	background-color: #999;
 	display: inline-block;
 }
 

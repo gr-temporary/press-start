@@ -29,6 +29,14 @@ html, body {
 	font-family: 'Press Start 2P', Helvetica, Arial;
 }
 
+p {
+	line-height: 1.5;
+}
+
+.small {
+	font-size: 0.8em;
+}
+
 * {
 	box-sizing: border-box;
 }
@@ -89,6 +97,12 @@ html, body {
 	transition: transform 0.5s;
 }
 
+.rom-item.hello {
+	text-align: center;
+	flex-direction: column;
+	padding: 0 50px;
+}
+
 .rom-item {
 	flex: 0 0 100vw;
 	text-align: center;
@@ -116,7 +130,6 @@ html, body {
 .rom-item .rom-name {
 	margin-top: 25px;
 	font-size: 20px;
-	line-height: 1.5;
 }
 
 .scroll-button {

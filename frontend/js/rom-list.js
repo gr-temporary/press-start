@@ -18,12 +18,12 @@ module.exports = {
 		},
 		setRoms: function(list) {
 			list.forEach((x, i) => {
-				x.index = i;
+				x.index = i + 1;
 				this.roms.push(x);
 			});
-			if(this.roms.length) {
+			/*if(this.roms.length) {
 				this.activeIndex = 0;
-			}
+			}*/
 		},
 		onKeypress: function(key) {
 			if(!this.active) {
@@ -37,14 +37,14 @@ module.exports = {
 			}
 		},
 		next: function(dir) {
-			if(this.activeIndex < 0) {
+			if(this.roms.length == 0) {
 				return;
 			}
 			let idx = this.activeIndex + dir;
 			if(idx < 0) idx = this.roms.length - 1;
 			if(idx >= this.roms.length) idx = 0;
 			this.activeIndex = idx;
-			this.$refs.list.style.transform = "translateX(" + (-100 * this.activeIndex) + "vw)";
+			this.$refs.list.style.transform = "translateX(" + (-100 * (this.activeIndex + 1)) + "vw)";
 
 			if(dir > 0) {
 				this.push(this.$refs.right);

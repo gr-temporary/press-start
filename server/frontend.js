@@ -7,16 +7,9 @@ const staticServer = require('./static-server.js');
 const socketServer = require('./socket-server.js');
 
 const bus = require('./bus.js');
-
-const ip = require('ip');
 const fs = require('fs');
 
 let gameWindow;
-
-function updateAddress(sender) {
-	let addr = ip.address();
-	sender.send("ip-address", addr);
-}
 
 function listRoms(sender) {
 	let frontendPath = path.join(__dirname, '..', 'frontend');
@@ -52,7 +45,6 @@ function init() {
 	socketServer.init(staticServer.get());
 
 	ipcMain.on('ready', (event) => {
-		updateAddress(event.sender);
 		bus.emit('fetch-players');
 	});
 	ipcMain.on('get-roms', (event) => {
