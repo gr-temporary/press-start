@@ -11,7 +11,8 @@ class Player {
 			a: false,
 			b: false,
 			select: false,
-			start: false
+			start: false,
+			pause: false
 		};
 		this.primary = false;
 		this.type = 'unknown';

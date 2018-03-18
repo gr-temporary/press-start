@@ -21,7 +21,7 @@ function listRoms(sender) {
 		let image = fs.existsSync(img) ? x + '.png' : 'NES Test.png';
 		result.push({
 			name: x,
-			rom: x + '.rom',
+			rom: x + '.nes',
 			preview: image 
 		});
 	});

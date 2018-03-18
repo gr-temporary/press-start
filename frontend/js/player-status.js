@@ -16,12 +16,13 @@ function createPlayer() {
 				a: false,
 				b: false,
 				select: false,
-				start: false
+				start: false,
+				pause: false
 			}
 		};
 }
 
-// gloabal, because working with objects through proxies is pain
+// global, because working with objects through proxies is pain
 let players = [createPlayer(), createPlayer()],
 	defaultPlayer = createPlayer(),
 	nullPlayer = createPlayer(),
@@ -44,6 +45,8 @@ module.exports = {
 		updatePlayers: function(newPlayers) {
 			players[0].id = null;
 			players[1].id = null;
+			this.players[0].id = null;
+			this.players[1].id = null;
 			newPlayers.forEach((x, i) => {
 				players[i].id = x.id;
 				players[i].type = x.type;
@@ -51,6 +54,7 @@ module.exports = {
 				this.players[i].type = x.type;
 				this.players[i].connected = x.id != null;
 			});
+
 		},
 		updateKeys: function(data) {
 			let player = players.findIndex(x => x.id == data.player);
@@ -78,6 +82,7 @@ module.exports = {
 				case 88: defaultPlayer.keys.b = true; break; // x
 				case 32: defaultPlayer.keys.select = true; break; // space
 				case 13: defaultPlayer.keys.start = true; break; // enter
+				case 27: defaultPlayer.keys.pause = true; break; // escape
 			}
 			this.updateJoysticks();
 		},
@@ -91,6 +96,7 @@ module.exports = {
 				case 88: defaultPlayer.keys.b = false; break; // x
 				case 32: defaultPlayer.keys.select = false; break; // space
 				case 13: defaultPlayer.keys.start = false; break; // enter
+				case 27: defaultPlayer.keys.pause = false; break; // escape
 			}
 			this.updateJoysticks();
 		},
@@ -124,6 +130,9 @@ module.exports = {
 					joysticks[1][i] = nullPlayer.keys[i];
 				}
 			}
+		},
+		flushJoysticks: function() {
+
 		},
 		getKeys: function() {
 			return joysticks;

@@ -40,7 +40,7 @@
 	</script>
 
 	<script id="rom-list" type="text/x-template">
-		<div class="rom-gallery">
+		<div class="rom-gallery" v-bind:class="{ inactive: !active }">
 			<div class="rom-list" ref="list">
 				<hello-screen></hello-screen>
 				<div class="rom-item" v-for="rom in roms">
@@ -70,8 +70,8 @@
 	</script>
 
 	<script id="game-screen" type="text/x-template">
-		<div class="game-screen">
-			<canvas ref="canvas"></canvas>
+		<div class="game-screen" v-bind:class="{ inactive: !active }">
+			<canvas class="main-canvas" ref="canvas" width="256" height="240"></canvas>
 		</div>
 	</script>
 

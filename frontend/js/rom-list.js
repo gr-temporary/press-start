@@ -35,6 +35,11 @@ module.exports = {
 			if(key == 'right') {
 				this.next(1);
 			}
+			if(key == 'start' && this.activeIndex > -1) {
+				console.log("Starting ROM " + this.roms[this.activeIndex].name);
+				this.deactivate();
+				bus.emit('play-rom', this.roms[this.activeIndex]);
+			}
 		},
 		next: function(dir) {
 			if(this.roms.length == 0) {
@@ -47,15 +52,18 @@ module.exports = {
 			this.$refs.list.style.transform = "translateX(" + (-100 * (this.activeIndex + 1)) + "vw)";
 
 			if(dir > 0) {
-				this.push(this.$refs.right);
+				this.pushButton(this.$refs.right);
 			} else {
-				this.push(this.$refs.left);
+				this.pushButton(this.$refs.left);
 			}
 		},
-		push: function(button) {
+		pushButton: function(button) {
 			button.classList.remove('push');
 			button.offsetWidth = button.offsetWidth;
 			button.classList.add('push');
+		},
+		deactivate: function() {
+			this.active = false;
 		}
 	},
 	mounted: function() {

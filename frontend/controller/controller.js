@@ -4,6 +4,7 @@ var info = document.querySelector(".info");
 var dpad = document.querySelector(".d-pad");
 var ab = document.querySelector(".a-b");
 var startSelect = document.querySelector(".start-select");
+var pause = document.querySelector(".pause");
 var container = document.querySelector(".container");
 
 var buttons = {
@@ -14,7 +15,8 @@ var buttons = {
 	down: false,
 	left: false,
 	start: false,
-	select: false
+	select: false,
+	pause: false
 };
 
 function detectOS() {
@@ -43,6 +45,9 @@ function updateDpad(touches) {
 		var x = (touches[i].clientX - rect.left) / rect.width - 0.5;
 		var y = (touches[i].clientY - rect.top) / rect.height - 0.5;
 		var a = Math.atan2(y, x);
+		if(Math.abs(x) > 1.2 || Math.abs(y) > 1.2) {
+			continue;
+		}
 		if(Math.abs(a) < pi4) {
 			buttons.right = true;
 		}
@@ -65,11 +70,45 @@ function updateAB(touches) {
 	for(var i=0; i<touches.length; i++) {
 		var x = (touches[i].clientX - rect.left) / rect.width - 0.5;
 		var y = (touches[i].clientY - rect.top) / rect.height - 0.5;
+		if(Math.abs(x) > 1.2 || Math.abs(y) > 1.2) {
+			continue;
+		}
 		if(x < 0) {
 			buttons.a = true;
 		}
 		if(x > 0) {
 			buttons.b = true;
+		}
+	}
+}
+
+function updateStartSelect(touches) {
+	var rect = startSelect.getBoundingClientRect();
+	buttons.start = false;
+	buttons.select = false;
+	for(var i=0; i<touches.length; i++) {
+		var x = (touches[i].clientX - rect.left) / rect.width - 0.5;
+		var y = (touches[i].clientY - rect.top) / rect.height - 0.5;
+		if(Math.abs(x) > 1.2 || Math.abs(y) > 1.2) {
+			continue;
+		}
+		if(x < 0) {
+			buttons.start = true;
+		}
+		if(x > 0) {
+			buttons.select = true;
+		}
+	}
+}
+
+function updatePause(touches) {
+	var rect = pause.getBoundingClientRect();
+	buttons.pause = false;
+	for(var i=0; i<touches.length; i++) {
+		var x = (touches[i].clientX - rect.left) / rect.width - 0.5;
+		var y = (touches[i].clientY - rect.top) / rect.height - 0.5;
+		if(x > -1 && x < 1 && y > -1 && y < 1) {
+			buttons.pause = true;
 		}
 	}
 }
@@ -89,14 +128,24 @@ function addTouchEvents(element, callback) {
 
 addTouchEvents(dpad, updateDpad);
 addTouchEvents(ab, updateAB);
+addTouchEvents(startSelect, updateStartSelect);
+addTouchEvents(pause, updatePause);
 
 function updatePrimary(primary) {
-	if(primary) {
+	if(primary === true) {
 		container.classList.remove('secondary');
 		container.classList.add('primary');
-	} else {
+		startSelect.classList.remove('hidden');
+	}
+	if(primary === false) {
 		container.classList.remove('primary');
 		container.classList.add('secondary');
+		startSelect.classList.add('hidden');
+	}
+	if(primary === null) {
+		container.classList.remove('primary');
+		container.classList.remove('secondary');
+		startSelect.classList.add('hidden');
 	}
 }
 
@@ -120,6 +169,7 @@ socket.on('connect', () => {
 	socket.emit("type", { os: os, ua: navigator.userAgent });
 	socket.on("primary", updatePrimary);
 	socket.on('disconnect', () => {
+		updatePrimary(null);
 		container.classList.add('disconnected');
 	});
 });

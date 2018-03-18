@@ -4,6 +4,10 @@ html {
 	font-size: 10px;
 }
 
+* {
+	touch-action: none;
+}
+
 body {
 	width: 100%;
 	height: 100%;
@@ -11,6 +15,16 @@ body {
 	padding: 0;
 	overflow: hidden;
 	font-family: Arial;
+
+	--primary-bg: #813C3C;
+	--primary-fg: #EC1C1C;
+
+	--secondary-bg: #393939;
+	--secondary-fg: #4214CD;
+}
+
+.hidden {
+	display: none;
 }
 
 .shadow {
@@ -19,13 +33,13 @@ body {
 }
 
 .primary .shadow {
-	background-color: #EC1C1C;
-	box-shadow: 0 1rem 0 0 #813C3C;
+	background-color: var(--primary-fg);
+	box-shadow: 0 1rem 0 0 var(--primary-bg);
 }
 
 .secondary .shadow {
-	background-color: #4214CD;
-	box-shadow: 0 1rem 0 0 #392F59;
+	background-color: var(--secondary-fg);
+	box-shadow: 0 1rem 0 0 var(--secondary-bg);
 }
 
 .shadow.pushed {
@@ -56,6 +70,16 @@ body {
 .disconnected .indicator {
 	background-color: #f00;
 	box-shadow: 0 0 0.1rem -0.1rem rgba(255,0,0,0.4);
+}
+
+.pause {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	line-height: 3rem;
+	height: 3rem;
+	padding: 0 1rem;
+	border-radius: 3rem;
 }
 
 .d-pad {
@@ -111,6 +135,7 @@ body {
 	height: 8rem;
 	border-radius: 50%;
 	display: inline-block;
+	pointer-events: none;
 }
 
 .a {
@@ -127,14 +152,35 @@ body {
 	padding: 2rem;
 }
 
+.primary .start-select {
+	background-color: var(--primary-bg);
+}
+
+.secondary .start-select {
+	background-color: var(--secondary-bg);
+}
+
 .start, .select {
 	background-color: #444;
 	width: 8rem;
 	height: 2rem;
+	line-height: 2rem;
+	font-size: 1.5rem;
 	display: inline-block;
 	border-radius: 100rem;
 	text-align: center;
 	color: #999;
+	pointer-events: none;
+}
+
+.primary .start, .primary .select {
+	background-color: var(--primary-fg);
+	color: var(--primary-bg);
+}
+
+.secondary .start, .secondary .select {
+	background-color: var(--secondary-fg);
+	color: var(--secondary-bg);
 }
 
 .start {
