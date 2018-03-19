@@ -46,6 +46,8 @@ module.exports = {
 			if(this.address) {
 				qrcode.toCanvas(this.$refs.canvas, "http://" + this.address + ":3003", (error) => {
 					console.log(error);
+					this.$refs.canvas.style.width = "200px";
+					this.$refs.canvas.style.height = "200px";
 				});
 			}
 		}

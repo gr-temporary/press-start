@@ -72,6 +72,11 @@
 	<script id="game-screen" type="text/x-template">
 		<div class="game-screen" v-bind:class="{ inactive: !active }">
 			<canvas class="main-canvas" ref="canvas" width="256" height="240"></canvas>
+			<div class="game-curtain" v-show="paused">
+				<ul class="pause-menu">
+					<li v-for="(item, index) in menu" v-bind:class="{ active: menuItem == index }">{{item.name}}</li>
+				</ul>
+			</div>
 		</div>
 	</script>
 

@@ -80,13 +80,11 @@ function updateButtons() {
 
 	function setButton(player, button, state) {
 		let b = buttonMap[button];
-		player++;
 		if(!button) return;
-		//console.log(player, button, state, nes);
 		if(state) {
-			nes.buttonDown(player, b);
+			nes.buttonDown(player + 1, b);
 		} else {
-			nes.buttonUp(player, b);
+			nes.buttonUp(player + 1, b);
 		}
 	}
 	
@@ -102,12 +100,26 @@ module.exports = {
 	data: function() {
 		return {
 			active: false,
-			paused: false
+			paused: false,
+			menu: [
+				{
+					name: 'resume'
+				},
+				{
+					name: 'restart'
+				},
+				{
+					name: 'quit'
+				}
+			],
+			menuItem: 0,
+			currentRom: null
 		};
 	},
 	methods: {
 		playRom: function(rom) {
 			console.log("Loading ROM " + rom.name);
+			this.currentRom = rom;
 			let data = fs.readFileSync('frontend/roms/' + rom.rom, {encoding: 'binary'});
 			nes.loadROM(data);
 			this.active = true;
@@ -125,11 +137,41 @@ module.exports = {
 		},
 		pause: function() {
 			this.paused = true;
+			this.menuItem = 0;
+		},
+		quit: function() {
+			this.active = false;
+			bus.emit('game-quit');
 		},
 		onKeyPress: function(key) {
 			console.log(key);
-			if(this.active && key == 'pause') {
-				this.pause();
+			if(this.active) {
+				if(key == 'pause') {
+					if(this.paused) {
+						this.start();
+					} else {
+						this.pause();
+					}
+				}
+				if(this.paused) {
+					if(key == 'up') {
+						this.menuItem = (this.menuItem - 1 < 0) ? this.menu.length - 1 : this.menuItem - 1;
+					}
+					if(key == 'down') {
+						this.menuItem = (this.menuItem + 1 >= this.menu.length) ? 0 : this.menuItem + 1;
+					}
+					if(key == 'start') {
+						if(this.menu[this.menuItem].name == 'resume') {
+							this.start();
+						}
+						if(this.menu[this.menuItem].name == 'restart') {
+							this.playRom(this.currentRom);
+						}
+						if(this.menu[this.menuItem].name == 'quit') {
+							this.quit();
+						}
+					}
+				}
 			}
 		}
 	},

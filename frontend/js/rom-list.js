@@ -40,6 +40,11 @@ module.exports = {
 				this.deactivate();
 				bus.emit('play-rom', this.roms[this.activeIndex]);
 			}
+			if(key == 'pause') {
+				this.activeIndex = -1;
+				this.$refs.list.style.transform = "translateX(" + (-100 * (this.activeIndex + 1)) + "vw)";
+			}
+			//bus.emit("flush-keys");
 		},
 		next: function(dir) {
 			if(this.roms.length == 0) {
@@ -62,6 +67,9 @@ module.exports = {
 			button.offsetWidth = button.offsetWidth;
 			button.classList.add('push');
 		},
+		activate: function() {
+			this.active = true;
+		},
 		deactivate: function() {
 			this.active = false;
 		}
@@ -72,5 +80,6 @@ module.exports = {
 		ipcRenderer.on("rom-list", (event, data) => this.setRoms(data));
 
 		bus.on('keypress', (key) => this.onKeypress(key));
+		bus.on('game-quit', () => this.activate());
 	}
 };

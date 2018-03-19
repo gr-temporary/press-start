@@ -54,7 +54,11 @@ module.exports = {
 				this.players[i].type = x.type;
 				this.players[i].connected = x.id != null;
 			});
-
+			players.forEach((x) => {
+				for(let k in x.keys) {
+					x.keys[k] = false;
+				}
+			});
 		},
 		updateKeys: function(data) {
 			let player = players.findIndex(x => x.id == data.player);
@@ -102,37 +106,27 @@ module.exports = {
 		},
 		updateJoysticks: function() {
 			let prev, next;
-			if(players[0].id) {
-				for(let i in players[0].keys) {
-					prev = joysticks[0][i];
-					next = players[0].keys[i] || defaultPlayer.keys[i];
-					joysticks[0][i] = next;
-					if(prev != next && next) {
-						bus.emit('keypress', i);
-					} 
-				}
-			} else {
-				for(let i in players[0].keys) {
-					prev = joysticks[0][i];
-					next = defaultPlayer.keys[i];
-					joysticks[0][i] = next;
-					if(prev != next && next) {
-						bus.emit('keypress', i);
+			function update(idx, defaultPlayer) {
+				for(let key in players[idx].keys) {
+					prev = joysticks[idx][key];
+					next = players[idx].keys[key] || defaultPlayer.keys[key];
+					joysticks[idx][key] = next; 
+					if(idx == 0 && prev != next && next) {
+						bus.emit('keypress', key);
 					} 
 				}
 			}
-			if(players[1].id) {
-				for(let i in players[1].keys) {
-					joysticks[1][i] = players[1].keys[i];
-				}
-			} else {
-				for(let i in players[1].keys) {
-					joysticks[1][i] = nullPlayer.keys[i];
-				}
-			}
+			update(0, defaultPlayer);
+			update(1, nullPlayer);
 		},
 		flushJoysticks: function() {
-
+			function update(idx, defaultPlayer) {
+				for(let key in players[idx].keys) {
+					joysticks[idx][key] = players[idx].keys[key] || defaultPlayer.keys[key];
+				}
+			}
+			update(0, defaultPlayer);
+			update(1, nullPlayer);
 		},
 		getKeys: function() {
 			return joysticks;
@@ -146,6 +140,7 @@ module.exports = {
 		ipcRenderer.on("player-type", (event, data) => this.updateType(data));
 
 		bus.on("get-keys", () => bus.emit("joysticks", this.getKeys() ));
+		bus.on("flush-keys", () => this.flushJoysticks());
 		  
 		document.addEventListener('keydown', (event) => this.realKeyDown(event));
 		document.addEventListener('keyup', (event) => this.realKeyUp(event));
