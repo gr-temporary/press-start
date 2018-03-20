@@ -30,16 +30,19 @@ body {
 .shadow {
 	background-color: #999;
 	box-shadow: 0 1rem 0 0 #444;
+	color: #444;
 }
 
 .primary .shadow {
 	background-color: var(--primary-fg);
 	box-shadow: 0 1rem 0 0 var(--primary-bg);
+	color: var(--primary-bg);
 }
 
 .secondary .shadow {
 	background-color: var(--secondary-fg);
 	box-shadow: 0 1rem 0 0 var(--secondary-bg);
+	color: var(--secondary-bg);
 }
 
 .shadow.pushed {
@@ -80,6 +83,10 @@ body {
 	height: 3rem;
 	padding: 0 1rem;
 	border-radius: 3rem;
+}
+
+.pause:after {
+	content: 'PAUSE';
 }
 
 .d-pad {
@@ -136,10 +143,29 @@ body {
 	border-radius: 50%;
 	display: inline-block;
 	pointer-events: none;
+	position: relative;
 }
 
-.a {
+.a:after, .b:after {
+	font-size: 3rem;
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	top: 50%;
+	left: 0;
+	margin: -1.5rem 0 0 0;
+}
+
+.b {
 	margin-right: 6rem;
+}
+
+.a:after {
+	content: 'A';
+}
+
+.b:after {
+	content: 'B';
 }
 
 .start-select {
@@ -171,6 +197,14 @@ body {
 	text-align: center;
 	color: #999;
 	pointer-events: none;
+}
+
+.start:after {
+	content: 'START';
+}
+
+.select:after {
+	content: 'SELECT';
 }
 
 .primary .start, .primary .select {

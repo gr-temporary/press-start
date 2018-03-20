@@ -16,6 +16,7 @@ class Player {
 		};
 		this.primary = false;
 		this.type = 'unknown';
+		this.os = null;
 
 		this.socket = socket;
 		this.id = socket.id;
@@ -29,6 +30,7 @@ class Player {
 	updateType(type) {
 		console.log(type);
 		this.type = type.os;
+		this.os = type.ua;
 		bus.emit('player-type', { player: this.id, type: this.type });
 	}
 

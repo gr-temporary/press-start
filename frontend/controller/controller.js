@@ -37,10 +37,13 @@ function detectOS() {
 function updateDpad(touches) {
 	var rect = dpad.getBoundingClientRect();
 	var pi4 = Math.PI / 4;
+	var t4 = Math.tan(pi4);
+	var o = 0.2;
 	buttons.right = false;
 	buttons.up = false;
 	buttons.down = false;
 	buttons.left = false;
+	const dead = 1.2;
 	for(var i=0; i<touches.length; i++) {
 		var x = (touches[i].clientX - rect.left) / rect.width - 0.5;
 		var y = (touches[i].clientY - rect.top) / rect.height - 0.5;
@@ -48,16 +51,16 @@ function updateDpad(touches) {
 		if(Math.abs(x) > 1.2 || Math.abs(y) > 1.2) {
 			continue;
 		}
-		if(Math.abs(a) < pi4) {
+		if(x > o && (y < t4 * x + o) && (y > -t4 * x - o)) {
 			buttons.right = true;
 		}
-		if(a < -pi4 && a > -3 * pi4) {
+		if(y < -o && (y < -t4 * x + o) && (y < t4 * x + o)) {
 			buttons.up = true;
 		}
-		if(a > pi4 && a < 3 * pi4) {
+		if(y > o && (y > t4 * x - o) && (y > t4 * x - o)) {
 			buttons.down = true;
 		}
-		if(a < -3 * pi4 || a > 3 * pi4) {
+		if(x < -o && (y > t4 * x - o) && (y < -t4 * x + o)) {
 			buttons.left = true;
 		}
 	}
@@ -73,10 +76,10 @@ function updateAB(touches) {
 		if(Math.abs(x) > 1.2 || Math.abs(y) > 1.2) {
 			continue;
 		}
-		if(x < 0) {
+		if(x > 0) {
 			buttons.a = true;
 		}
-		if(x > 0) {
+		if(x < 0) {
 			buttons.b = true;
 		}
 	}
@@ -92,10 +95,10 @@ function updateStartSelect(touches) {
 		if(Math.abs(x) > 1.2 || Math.abs(y) > 1.2) {
 			continue;
 		}
-		if(x < 0) {
+		if(x > 0) {
 			buttons.start = true;
 		}
-		if(x > 0) {
+		if(x < 0) {
 			buttons.select = true;
 		}
 	}
@@ -130,6 +133,21 @@ addTouchEvents(dpad, updateDpad);
 addTouchEvents(ab, updateAB);
 addTouchEvents(startSelect, updateStartSelect);
 addTouchEvents(pause, updatePause);
+
+function toggleFullScreen() {
+	var doc = window.document;
+	var docEl = doc.documentElement;
+  
+	var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+	var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+  
+	if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+		requestFullScreen.call(docEl);
+	}
+	else {
+		cancelFullScreen.call(doc);
+	}
+}
 
 function updatePrimary(primary) {
 	if(primary === true) {

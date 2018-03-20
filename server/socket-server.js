@@ -33,6 +33,7 @@ function addPlayer(player) {
 }
 
 function removePlayer(player) {
+	console.log(player.type, player.os);
 	delete playerMap[player.id];
 	let i = playerQueue.findIndex(p => p.id == player.id);
 	playerQueue.splice(i, 1);

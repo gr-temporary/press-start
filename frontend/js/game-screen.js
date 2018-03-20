@@ -144,7 +144,7 @@ module.exports = {
 			bus.emit('game-quit');
 		},
 		onKeyPress: function(key) {
-			console.log(key);
+			//console.log(key);
 			if(this.active) {
 				if(key == 'pause') {
 					if(this.paused) {
