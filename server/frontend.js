@@ -50,6 +50,9 @@ function init() {
 	ipcMain.on('get-roms', (event) => {
 		listRoms(event.sender);
 	});
+	ipcMain.on('get-rom-path', (event) => {
+		event.sender.send('rom-path', path.join(process.cwd(), "frontend", "roms"));
+	});
 
 	bus.on('player-keys', sendKeys);
 	bus.on('player-type', sendType);

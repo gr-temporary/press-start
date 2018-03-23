@@ -113,14 +113,16 @@ module.exports = {
 				}
 			],
 			menuItem: 0,
-			currentRom: null
+			currentRom: null,
+			romPath: ""
 		};
 	},
 	methods: {
 		playRom: function(rom) {
 			console.log("Loading ROM " + rom.name);
+			const path = require('path');
 			this.currentRom = rom;
-			let data = fs.readFileSync('frontend/roms/' + rom.rom, {encoding: 'binary'});
+			let data = fs.readFileSync(path.join(__dirname, '..', 'roms', rom.rom), {encoding: 'binary'});
 			nes.loadROM(data);
 			this.active = true;
 			this.start();
@@ -176,9 +178,15 @@ module.exports = {
 		}
 	},
 	mounted: function() {
+		console.log(__dirname);
 		canvas = this.$refs.canvas;
 		context = canvas.getContext('2d');
 		bus.on('play-rom', (rom) => this.playRom(rom));
 		bus.on('keypress', (key) => this.onKeyPress(key));
+		ipcRenderer.send("get-rom-path");
+		ipcRenderer.on("rom-path", (event, path) => {
+			console.log(path);
+			this.romPath = path;
+		});
 	}
 };

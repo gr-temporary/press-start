@@ -29,7 +29,7 @@ function createWindow() {
 		slashes: true
 	}));
 
-	win.webContents.openDevTools();
+	//win.webContents.openDevTools();
 
 	frontend.init(win);
 }
